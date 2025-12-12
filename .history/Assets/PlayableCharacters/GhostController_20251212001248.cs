@@ -113,23 +113,4 @@ public class GhostController : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other == null) return;
-        if (other.CompareTag("lava"))
-        {
-            HandleLavaCollision(other.gameObject);
-        }
-    }
-
-    protected void HandleLavaCollision(GameObject lava)
-    {
-        Kill();
-    }
-
-    protected void Kill()
-    {
-        Destroy(gameObject);
-    }
 }

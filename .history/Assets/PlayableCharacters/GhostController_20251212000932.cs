@@ -53,8 +53,6 @@ public class GhostController : MonoBehaviour
             IPosses target = h.GetComponent<IPosses>();
             if (target == null) continue;
 
-            
-
             currentPossessed = target;
 
             currentPossessed.OnPossessed();
@@ -62,13 +60,18 @@ public class GhostController : MonoBehaviour
 
             isPossessing = true;
 
-            
+            // cancelar movimiento y desactivar física para quedarse pegado al objeto poseído
             rb.linearVelocity = Vector3.zero;
-            
-                transform.SetParent(h.transform, false);
+            rb.isKinematic = true;
+
+            // hacer hijo del objeto poseído y centrar
+            MonoBehaviour mb = currentPossessed as MonoBehaviour;
+            if (mb != null)
+            {
+                transform.SetParent(mb.transform, false);
                 transform.localPosition = Vector3.zero;
                 transform.localRotation = Quaternion.identity;
-            
+            }
 
             SetGhostVisible(false);
             break;
@@ -84,7 +87,7 @@ public class GhostController : MonoBehaviour
 
         MonoBehaviour mb = currentPossessed as MonoBehaviour;
 
-        
+        // desapegar del padre antes de reposicionar
         transform.SetParent(null);
         if (mb != null)
         {
@@ -92,7 +95,7 @@ public class GhostController : MonoBehaviour
         }
 
         rb.linearVelocity = Vector3.zero;
-        
+        rb.isKinematic = false;
 
         SetGhostVisible(true);
 
@@ -112,24 +115,5 @@ public class GhostController : MonoBehaviour
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other == null) return;
-        if (other.CompareTag("lava"))
-        {
-            HandleLavaCollision(other.gameObject);
-        }
-    }
-
-    protected void HandleLavaCollision(GameObject lava)
-    {
-        Kill();
-    }
-
-    protected void Kill()
-    {
-        Destroy(gameObject);
     }
 }

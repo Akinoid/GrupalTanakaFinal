@@ -20,7 +20,7 @@ public class FlameCharacter : BaseCharacter
         if (!isPossessed) return;
     }
 
-    
+    // FlameCharacter es inmune a la lava: sobreescribimos el manejador
     protected override void HandleLavaCollision(GameObject lava)
     {
         // no hacer nada: inmune
