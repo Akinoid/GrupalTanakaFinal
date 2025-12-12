@@ -7,6 +7,7 @@ public class Building : MonoBehaviour
     private GameObject proyectionObject;
     private HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
     [SerializeField] float timer;
+    bool exist = false;
     private void Update()
     {
 
@@ -46,7 +47,7 @@ public class Building : MonoBehaviour
     {
         Destroy(proyectionObject);
     }
-    bool exist = false;
+    
     public void UpdateProyectionPosition(BuildingCharacter b)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -79,7 +80,7 @@ public class Building : MonoBehaviour
             {
                 SetProyectionColor(new Color(1f, 1f, 1f, 0.5f));
 
-                if (Input.GetMouseButton(0) && b.buildsCount > 0)
+                if (Input.GetMouseButtonDown(0) && b.buildsCount > 0)
                 {
                     PlaceObject();
                     b.buildsCount -= 1;
