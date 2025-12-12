@@ -1,10 +1,10 @@
 using UnityEngine;
-
+using Unity.Cinemachine;
 public abstract class BaseCharacter : MonoBehaviour , IPosses
 {
     protected Rigidbody rb;
     protected bool isPossessed = false;
-
+    public CinemachineCamera cinemachineCamera;
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();

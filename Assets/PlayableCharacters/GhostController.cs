@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-
+using UnityEngine.SceneManagement;
+using Unity.Cinemachine;
 public class GhostController : MonoBehaviour
 {
     public float ghostSpeed = 6f;
@@ -10,13 +11,17 @@ public class GhostController : MonoBehaviour
 
     private Vector3 respawnOffset = new Vector3(1.2f, 0, 0);
     private bool isPossessing = false;
-
+    private Vector3 intialLocalScale;
     private Renderer[] renderers;
-
+    [SerializeField] CinemachineCamera cinemachineCamera;
+    Collider h;
+    private string thisScene;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         renderers = GetComponentsInChildren<Renderer>();
+        thisScene = SceneManager.GetActiveScene().name;
+        intialLocalScale = transform.localScale;
     }
 
     private void Update()
@@ -68,8 +73,12 @@ public class GhostController : MonoBehaviour
                 transform.SetParent(h.transform, false);
                 transform.localPosition = Vector3.zero;
                 transform.localRotation = Quaternion.identity;
-            
-
+                transform.localScale = intialLocalScale;
+            this.h = h;
+            cinemachineCamera.Follow = h.gameObject.transform;
+            /*BaseCharacter c = h.GetComponent<BaseCharacter>();
+            c.cinemachineCamera.Priority = 1;
+            cinemachineCamera.Priority = 0;*/
             SetGhostVisible(false);
             break;
         }
@@ -92,10 +101,10 @@ public class GhostController : MonoBehaviour
         }
 
         rb.linearVelocity = Vector3.zero;
-        
+        transform.localScale = intialLocalScale;
 
         SetGhostVisible(true);
-
+        cinemachineCamera.Follow = gameObject.transform;
         currentPossessed = null;
         isPossessing = false;
     }
@@ -131,5 +140,6 @@ public class GhostController : MonoBehaviour
     protected void Kill()
     {
         Destroy(gameObject);
+        SceneManager.LoadScene(thisScene);
     }
 }
