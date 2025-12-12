@@ -1,14 +1,16 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Unity.Cinemachine;
-public abstract class BaseCharacter : MonoBehaviour , IPosses
+public abstract class BaseCharacter : MonoBehaviour, IPosses
 {
     protected Rigidbody rb;
     protected bool isPossessed = false;
-    public CinemachineCamera cinemachineCamera;
+    private string thisScene;
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
         enabled = false;
+        thisScene = SceneManager.GetActiveScene().name;
     }
 
     public virtual void OnPossessed()
@@ -68,4 +70,10 @@ public abstract class BaseCharacter : MonoBehaviour , IPosses
 
     protected abstract void HandleMovement();
     protected abstract void HandleAbilities();
+
+    protected virtual void OnDead()
+    {
+        Destroy(gameObject);
+        SceneManager.LoadScene(thisScene);
+    }
 }
